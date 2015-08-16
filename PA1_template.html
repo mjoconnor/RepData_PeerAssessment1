@@ -67,8 +67,10 @@ img {
 <p><strong>Mike O’Connor</strong></p>
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
-<p>To load the data, we must first extract it from the .zip file. Then we can read the .csv file.</p>
-<pre class="r"><code>unzip(&quot;activity.zip&quot;)
+<p>To load the data, we must first extract it from the .zip file. Then we can read the .csv file. We will also load the lattice library now for use in the rest of the document.</p>
+<pre class="r"><code>library(lattice)
+
+unzip(&quot;activity.zip&quot;)
 
 data &lt;- read.csv(&quot;activity.csv&quot;, colClasses=c(&quot;integer&quot;,&quot;Date&quot;,&quot;integer&quot;))</code></pre>
 <hr />
@@ -123,17 +125,14 @@ hist(comp.steps$steps, breaks=10, main=&quot;Frequency of Total Daily Steps&quot
 <pre><code>## [1] 10766.19</code></pre>
 <pre class="r"><code>median(comp.steps$steps)</code></pre>
 <pre><code>## [1] 10766.19</code></pre>
-<p>As you can see, there is vitually no difference between the results from the complete and incomplete data.</p>
 <hr />
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
 <p>Finally, we will determine whether there is more activity on weekdays or weekends. We start by adding a column to the dataset that identifies where the date falls in the week.</p>
 <pre class="r"><code>comp$weekday &lt;- ifelse(weekdays(comp$date) == &quot;Saturday&quot; | weekdays(comp$date) == &quot;Sunday&quot;, &quot;Weekend&quot;, &quot;Weekday&quot;)</code></pre>
-<p>Then we will aggregate the data to find the average number of steps per 5-minute interval between weekdays and weekends. Using that aggregated data, we will make a multi panel line graph using the lattice library to see if there is a difference.</p>
+<p>Then we will aggregate the data to find the average number of steps per 5-minute interval between weekdays and weekends. Using that aggregated data, we will make a multi panel line graph to see if there is a difference.</p>
 <pre class="r"><code>comp.time &lt;- aggregate(steps ~ interval+weekday,data=comp,mean)
-
-library(lattice)
 
 xyplot(steps ~ interval | weekday, data = comp.time, type = &quot;l&quot;, layout = c(1,2), ylab = &quot;# of Steps&quot;,
        xlab = &quot;Time (24-hour clock)&quot;, main = &quot;Average Steps per 5-Minute Interval&quot;)</code></pre>

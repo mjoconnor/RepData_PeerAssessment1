@@ -3,9 +3,11 @@
 
 ## Loading and preprocessing the data
 
-To load the data, we must first extract it from the .zip file. Then we can read the .csv file.
+To load the data, we must first extract it from the .zip file. Then we can read the .csv file. We will also load the lattice library now for use in the rest of the document.
 
 ```r
+library(lattice)
+
 unzip("activity.zip")
 
 data <- read.csv("activity.csv", colClasses=c("integer","Date","integer"))
@@ -117,9 +119,6 @@ median(comp.steps$steps)
 ```
 ## [1] 10766.19
 ```
-
-As you can see, there is vitually no difference between the results from the complete and incomplete data.  
-
 ***
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -130,12 +129,10 @@ Finally, we will determine whether there is more activity on weekdays or weekend
 comp$weekday <- ifelse(weekdays(comp$date) == "Saturday" | weekdays(comp$date) == "Sunday", "Weekend", "Weekday")
 ```
 
-Then we will aggregate the data to find the average number of steps per 5-minute interval between weekdays and weekends. Using that aggregated data, we will make a multi panel line graph using the lattice library to see if there is a difference.
+Then we will aggregate the data to find the average number of steps per 5-minute interval between weekdays and weekends. Using that aggregated data, we will make a multi panel line graph to see if there is a difference.
 
 ```r
 comp.time <- aggregate(steps ~ interval+weekday,data=comp,mean)
-
-library(lattice)
 
 xyplot(steps ~ interval | weekday, data = comp.time, type = "l", layout = c(1,2), ylab = "# of Steps",
        xlab = "Time (24-hour clock)", main = "Average Steps per 5-Minute Interval")
